@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DomaineRequest;
 use App\Http\Resources\DomaineCollection;
 use App\Http\Resources\DomaineResource;
 use App\Models\Domaine;
@@ -28,14 +29,8 @@ class DomaineController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DomaineRequest $request)
     {
-        $request->validate([
-            'name' => "require|unique:domaines|max:100"
-        ]);
-
-        // TODO: use form request validtion
-
         $domaine = Domaine::create($request->only([
             'name'
         ]));

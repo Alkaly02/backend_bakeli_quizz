@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('cours', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->longText('content');
+            $table->foreignId('sous_domaine_id')->constrained('sous_domaines')->cascadeOnDelete();
             $table->timestamps();
         });
     }
