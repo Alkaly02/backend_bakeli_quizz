@@ -11,7 +11,7 @@ class Domaine extends Model
 
     protected $fillable = ['name'];
 
-    public function sousDomaines()
+    public function sous_domaines()
     {
         return $this->hasMany(SousDomaine::class);
     }

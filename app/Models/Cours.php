@@ -9,6 +9,8 @@ class Cours extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'content', 'sous_domaine_id'];
+
     public function sous_domaine()
     {
         return $this->belongsTo(SousDomaine::class);

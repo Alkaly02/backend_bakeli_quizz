@@ -18,7 +18,7 @@ class DomaineController extends Controller
      */
     public function index()
     {
-        $domaines = Domaine::all();
+        $domaines = Domaine::with('sous_domaines')->get();
 
         return response()->json(new DomaineCollection($domaines), Response::HTTP_OK);
     }

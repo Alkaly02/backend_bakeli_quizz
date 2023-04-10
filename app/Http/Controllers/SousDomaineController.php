@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SousDomaineCollection;
 use App\Http\Resources\SousDomaineResource;
+use App\Models\Domaine;
 use App\Models\SousDomaine;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,8 +18,8 @@ class SousDomaineController extends Controller
      */
     public function index()
     {
-        $sous_domaines = SousDomaine::all();
-        return response()->json(new SousDomaineResource($sous_domaines), Response::HTTP_OK);
+        $sous_domaines = SousDomaine::with('domaine')->get();
+        return response()->json(new SousDomaineCollection($sous_domaines), Response::HTTP_OK);
     }
 
     /**
@@ -48,7 +50,7 @@ class SousDomaineController extends Controller
      */
     public function show(SousDomaine $sousDomaine)
     {
-        return response()->json(new SousDomaineResource($sousDomaine), Response::HTTP_OK);
+        return response()->json(new SousDomaineResource($sousDomaine->with('domaine')), Response::HTTP_OK);
     }
 
     /**
@@ -63,6 +65,8 @@ class SousDomaineController extends Controller
         $sousDomaine->update($request->only([
             'name'
         ]));
+
+        return response()->json(new SousDomaineResource($sousDomaine), Response::HTTP_OK);
     }
 
     /**
@@ -73,6 +77,23 @@ class SousDomaineController extends Controller
      */
     public function destroy(SousDomaine $sousDomaine)
     {
-        //
+        $sousDomaine->delete();
+
+        return response()->json("", Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Get all sous_domaines of a domaine
+     *
+     * @param  string $domaine_id
+     * @return \Illuminate\Http\Response
+     */
+    public function get_domaine_sous_domaines(Domaine $domaine)
+    {
+        // $domaine = Domaine::find($domaine_id);
+        // echo $domaine;
+        $sous_domaine = $domaine->sous_domaines;
+
+        return response()->json(new SousDomaineCollection($sous_domaine), Response::HTTP_OK);
     }
 }
