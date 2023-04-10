@@ -10,6 +10,8 @@ class Quizz extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'cours_id'];
+
     public function cours()
     {
         return $this->belongsTo(Cours::class);
