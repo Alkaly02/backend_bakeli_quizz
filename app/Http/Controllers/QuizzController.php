@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\QuestionCollection;
 use App\Http\Resources\QuizzCollection;
 use App\Http\Resources\QuizzResource;
 use App\Models\Cours;
@@ -36,9 +37,31 @@ class QuizzController extends Controller
             'cours_id' => 'required'
         ]);
 
-        $quizz = Quizz::create($request->only([
-            'name', 'cours_id'
-        ]));
+        $cours = Cours::find($request->cours_id);
+        $quizz = $cours->quizzes()->create([
+            'name' => $request->name
+        ]);
+
+        foreach ($request->questions as $question) {
+            /**
+             * Create new question related to that quizz.
+             */
+            $new_question = $quizz->questions()->create([
+                'question' => $question['question']
+            ]);
+
+            if (count($question['answerOptions'])) {
+                foreach ($question['answerOptions'] as $answerOption) {
+                    /**
+                     * Create new reponse related to that question.
+                     */
+                    $new_question->reponses()->create([
+                        'reponse' => $answerOption['reponse'],
+                        'is_correct' => $answerOption['is_correct']
+                    ]);
+                }
+            }
+        }
 
         return response()->json(new QuizzResource($quizz), Response::HTTP_CREATED);
     }
@@ -81,6 +104,15 @@ class QuizzController extends Controller
     {
         $quizzes = $cours->quizzes;
 
-        return response()->json(new QuizzCollection($quizzes, Response::HTTP_OK));
+        return response()->json(new QuizzCollection($quizzes), Response::HTTP_OK);
+    }
+
+    public function get_quizz_questions(Quizz $quizz)
+    {
+        $questions = $quizz->questions;
+        foreach ($questions as $question) {
+            $question['reponses'] = $question->reponses;
+        }
+        return response()->json(new QuestionCollection($questions), Response::HTTP_OK);
     }
 }

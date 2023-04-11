@@ -90,8 +90,6 @@ class SousDomaineController extends Controller
      */
     public function get_domaine_sous_domaines(Domaine $domaine)
     {
-        // $domaine = Domaine::find($domaine_id);
-        // echo $domaine;
         $sous_domaine = $domaine->sous_domaines;
 
         return response()->json(new SousDomaineCollection($sous_domaine), Response::HTTP_OK);
