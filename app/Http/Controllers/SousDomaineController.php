@@ -18,7 +18,7 @@ class SousDomaineController extends Controller
      */
     public function index()
     {
-        $sous_domaines = SousDomaine::with('domaine')->get();
+        $sous_domaines = SousDomaine::with(['domaine', 'cours'])->get();
         return response()->json(new SousDomaineCollection($sous_domaines), Response::HTTP_OK);
     }
 
@@ -90,7 +90,8 @@ class SousDomaineController extends Controller
      */
     public function get_domaine_sous_domaines(Domaine $domaine)
     {
-        $sous_domaine = $domaine->sous_domaines;
+        // $sous_domaine = $domaine->sous_domaines;
+        $sous_domaine = $domaine->sous_domaines()->with('cours')->get();
 
         return response()->json(new SousDomaineCollection($sous_domaine), Response::HTTP_OK);
     }
