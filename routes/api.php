@@ -35,5 +35,5 @@ Route::apiResource("/cours", CoursController::class);
 
 # quizzes
 Route::get("/quizzes/questions/{quizz}", [QuizzController::class, 'get_quizz_questions']);
-Route::get("/quizzes/cours/{cours}", [QuizzController::class, 'get_quizzes_by_cours']);
+Route::get("/cours/quizzes/{cours}", [QuizzController::class, 'get_quizzes_by_cours']);
 Route::apiResource("/quizzes", QuizzController::class);
