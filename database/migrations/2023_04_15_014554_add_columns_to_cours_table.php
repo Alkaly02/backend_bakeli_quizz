@@ -13,12 +13,6 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('domaines', function (Blueprint $table) {
-            $table->string("image")->nullable();
-            $table->string("theme")->nullable();
-            $table->string("description")->nullable();
-        });
-
         Schema::table('cours', function (Blueprint $table) {
             $table->string("image")->nullable();
             $table->string("description")->nullable();
@@ -32,12 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('domaines', function (Blueprint $table) {
-            $table->dropColumn('image');
-            $table->dropColumn('theme');
-            $table->dropColumn('description');
-        });
-
         Schema::table('cours', function (Blueprint $table) {
             $table->dropColumn('image');
             $table->dropColumn('description');
