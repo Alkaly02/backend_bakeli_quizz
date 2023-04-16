@@ -61,7 +61,9 @@ class DomaineController extends Controller
     {
         // TODO: we can check if the user is authorized to update
         $domaine->update($request->only([
-            'name'
+            'name',
+            "description",
+            "theme", "text_color", "image"
         ]));
 
         return response()->json(new DomaineResource($domaine), Response::HTTP_OK);
