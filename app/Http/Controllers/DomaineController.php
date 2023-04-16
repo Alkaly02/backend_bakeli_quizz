@@ -32,7 +32,7 @@ class DomaineController extends Controller
     public function store(DomaineRequest $request)
     {
         $domaine = Domaine::create($request->only([
-            'name', "theme", "description", "image",
+            'name', "theme", "description", "image", "text_color",
         ]));
 
         return response()->json(new DomaineResource($domaine), Response::HTTP_CREATED);

@@ -102,7 +102,8 @@ class QuizzController extends Controller
 
     public function get_quizzes_by_cours(Cours $cours)
     {
-        $quizzes = $cours->quizzes;
+        $quizzes = $cours->quizzes()->with("tentatives")->get();
+        // ->with('cours.sous_domaine')
 
         return response()->json(new QuizzCollection($quizzes), Response::HTTP_OK);
     }

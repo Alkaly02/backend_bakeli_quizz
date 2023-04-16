@@ -9,7 +9,7 @@ class Domaine extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'image', 'theme', "description"];
+    protected $fillable = ['name', 'image', 'theme', "description", "text_color"];
 
     public function sous_domaines()
     {

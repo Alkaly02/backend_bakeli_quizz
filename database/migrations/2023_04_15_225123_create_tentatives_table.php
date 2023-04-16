@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('cours', function (Blueprint $table) {
-            $table->longText("image")->nullable();
-            $table->longText("description")->nullable();
+        Schema::create('Tentatives', function (Blueprint $table) {
+            $table->id();
+            $table->integer("score");
+            $table->foreignId("quizz_id")->constrained("quizzs")->cascadeOnUpdate()->cascadeOnDelete();
+            $table->json('reponses');
+            $table->timestamps();
         });
     }
 
@@ -26,9 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('cours', function (Blueprint $table) {
-            $table->dropColumn('image');
-            $table->dropColumn('description');
-        });
+        Schema::dropIfExists('Tentatives');
     }
 };

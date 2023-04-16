@@ -14,9 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::table('domaines', function (Blueprint $table) {
-            $table->string("image")->nullable();
+            $table->longText("image")->nullable();
             $table->string("theme")->nullable();
-            $table->string("description")->nullable();
+            $table->string("text_color")->nullable();
+            $table->longText("description")->nullable();
         });
     }
 
@@ -30,6 +31,7 @@ return new class extends Migration
         Schema::table('domaines', function (Blueprint $table) {
             $table->dropColumn('image');
             $table->dropColumn('theme');
+            $table->dropColumn('text_color');
             $table->dropColumn('description');
         });
     }
