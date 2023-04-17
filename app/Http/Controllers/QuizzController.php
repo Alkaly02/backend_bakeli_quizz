@@ -8,6 +8,7 @@ use App\Http\Resources\QuizzResource;
 use App\Models\Cours;
 use App\Models\Question;
 use App\Models\Quizz;
+use App\Models\Reponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -111,6 +112,7 @@ class QuizzController extends Controller
         return response()->json(new QuizzCollection($quizzes), Response::HTTP_OK);
     }
 
+    
     /**
      * Retrieve all questions related to a quizz and responses related to a question
      *
@@ -124,6 +126,13 @@ class QuizzController extends Controller
         return response()->json(new QuestionCollection($questions), Response::HTTP_OK);
     }
 
+
+    /**
+     * store choices related to a quizz questions
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function add_questions_choix(Request $request)
     {
         // {
@@ -148,12 +157,31 @@ class QuizzController extends Controller
                 $question = Question::findOrFail($choix['question_id']);
                 if ($question) {
                     foreach ($choix['choixOptions'] as $id_reponse_choix) {
-                        $question->choix()->create([
-                            'reponse_id' => $id_reponse_choix
-                        ]);
+                        if (Reponse::findOrFail($id_reponse_choix)) {
+                            $question->choix()->create([
+                                'reponse_id' => $id_reponse_choix
+                            ]);
+                        }
                     }
                 }
             }
         }
+    }
+
+    public function get_quizz_choix(Quizz $quizz)
+    {
+        $choix = $quizz->questions()
+            ->with('reponses')
+            ->with('choix')
+            // ->select('id')
+            ->get();
+        // ->with('choix')
+        // ->get();
+        // echo $quizz->questions()
+        //     ->with('reponses')
+        //     ->with('choix')
+        //     ->get();
+        // $choix->makeHidden(['question_id']);
+        return response()->json(new QuizzCollection($choix), Response::HTTP_OK);
     }
 }

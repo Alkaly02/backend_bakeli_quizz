@@ -11,6 +11,8 @@ class Choix extends Model
 
     protected $fillable = ['reponse_id'];
 
+    protected $hidden = ['question_id'];
+
     public function question()
     {
         return $this->belongsTo(Question::class);

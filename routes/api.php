@@ -47,6 +47,7 @@ Route::get("/cours/sous_domaines/{sous_domaine}", [CoursController::class, 'get_
 Route::apiResource("/cours", CoursController::class);
 
 # quizzes
+Route::get("/quizzes/choix/{quizz}", [QuizzController::class, 'get_quizz_choix']);
 Route::post("/quizzes/choix", [QuizzController::class, 'add_questions_choix']);
 Route::get("/quizzes/questions/{quizz}", [QuizzController::class, 'get_quizz_questions']);
 Route::get("/cours/quizzes/{cours}", [QuizzController::class, 'get_quizzes_by_cours']);
