@@ -6,6 +6,7 @@ use App\Http\Resources\QuestionCollection;
 use App\Http\Resources\QuizzCollection;
 use App\Http\Resources\QuizzResource;
 use App\Models\Cours;
+use App\Models\Question;
 use App\Models\Quizz;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -102,18 +103,57 @@ class QuizzController extends Controller
 
     public function get_quizzes_by_cours(Cours $cours)
     {
-        $quizzes = $cours->quizzes()->with("tentatives")->get();
+        $quizzes = $cours->quizzes()
+            // ->with(["questions.reponses"])
+            ->get();
         // ->with('cours.sous_domaine')
 
         return response()->json(new QuizzCollection($quizzes), Response::HTTP_OK);
     }
 
+    /**
+     * Retrieve all questions related to a quizz and responses related to a question
+     *
+     * @param  \App\Models\Quizz  $quizz
+     * @return \Illuminate\Http\Response
+     */
     public function get_quizz_questions(Quizz $quizz)
     {
-        $questions = $quizz->questions;
-        foreach ($questions as $question) {
-            $question['reponses'] = $question->reponses;
-        }
+        $questions = $quizz->questions()->with("reponses")->get();
+
         return response()->json(new QuestionCollection($questions), Response::HTTP_OK);
+    }
+
+    public function add_questions_choix(Request $request)
+    {
+        // {
+        //     "quizz_id": 20,
+        //     "choix": [
+        //         {
+        //             "question_id": 4,
+        //             "choixOptions": [7,9]
+        //         },
+        //         {
+        //             "question_id": 5,
+        //             "choixOptions": [10]
+        //         }
+        //     ]
+        // }
+
+        if (Quizz::findOrFail($request->quizz_id)) {
+            foreach ($request->choix as $choix) {
+                /**
+                 * Check if the question exist
+                 */
+                $question = Question::findOrFail($choix['question_id']);
+                if ($question) {
+                    foreach ($choix['choixOptions'] as $id_reponse_choix) {
+                        $question->choix()->create([
+                            'reponse_id' => $id_reponse_choix
+                        ]);
+                    }
+                }
+            }
+        }
     }
 }
