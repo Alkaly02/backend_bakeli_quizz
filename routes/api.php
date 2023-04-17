@@ -30,8 +30,6 @@ Route::prefix('auth')->group(function () {
     Route::post('register',  [AuthController::class, 'register']);
     Route::get('refresh_token',  [AuthController::class, 'refreshToken']);
     Route::get('logout',  [AuthController::class, 'logout']);
-    // Route::post('login', 'AuthController@login')->name('auth.login.post');
-    // Route::post('logout', 'AuthController@logout')->name('auth.logout');
 });
 
 
