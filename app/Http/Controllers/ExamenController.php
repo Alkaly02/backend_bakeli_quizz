@@ -6,6 +6,8 @@ use App\Http\Resources\ExamenCollection;
 use App\Http\Resources\ExamenRessource;
 use App\Models\Domaine;
 use App\Models\Examen;
+use App\Models\ExamenQuestion;
+use App\Models\ExamenReponse;
 use App\Models\SousDomaine;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -119,6 +121,33 @@ class ExamenController extends Controller
         });
 
         return response()->json(new ExamenCollection($examens), Response::HTTP_OK); 
+    }
+
+    /**
+     * store choices related to an examen questions
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function add_questions_choix(Request $request)
+    {
+        if (Examen::findOrFail($request->examen_id)) {
+            foreach ($request->choix as $choix) {
+                /**
+                 * Check if the question exist
+                 */
+                $question = ExamenQuestion::findOrFail($choix['question_id']);
+                if ($question) {
+                    foreach ($choix['choixOptions'] as $id_reponse_choix) {
+                        if (ExamenReponse::findOrFail($id_reponse_choix)) {
+                            $question->choix()->create([
+                                'examen_reponse_id' => $id_reponse_choix
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
