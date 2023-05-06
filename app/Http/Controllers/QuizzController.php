@@ -69,6 +69,7 @@ class QuizzController extends Controller
         return response()->json(new QuizzResource($quizz), Response::HTTP_CREATED);
     }
 
+
     /**
      * Display the specified resource.
      *

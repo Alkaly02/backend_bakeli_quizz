@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DomaineController;
+use App\Http\Controllers\ExamenController;
 use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\SousDomaineController;
 use App\Http\Controllers\TentativeController;
@@ -51,6 +52,9 @@ Route::post("/quizzes/choix", [QuizzController::class, 'add_questions_choix']);
 Route::get("/quizzes/questions/{quizz}", [QuizzController::class, 'get_quizz_questions']);
 Route::get("/cours/quizzes/{cours}", [QuizzController::class, 'get_quizzes_by_cours']);
 Route::apiResource("/quizzes", QuizzController::class);
+
+#examens
+Route::apiResource('/examens', ExamenController::class);
 
 # choix
 
