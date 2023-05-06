@@ -108,7 +108,17 @@ class ExamenController extends Controller
      */
     public function show(Examen $examen)
     {
-        //
+        $examens = $examen
+            ->with(['questions.reponses'])
+            ->get();
+
+        $examens->each(function ($examen) {
+            $examen->questions->each(function ($question) {
+                $question->reponses->makeHidden('is_correct');
+            });
+        });
+
+        return response()->json(new ExamenCollection($examens), Response::HTTP_OK); 
     }
 
     /**
