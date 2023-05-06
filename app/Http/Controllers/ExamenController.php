@@ -67,8 +67,8 @@ class ExamenController extends Controller
         $sous_domaine = SousDomaine::findOrFail($request->sous_domaine_id);
         $examen = $sous_domaine->examens()->create([
             'name' => $request->name,
-            'duree' => $request->duree
-
+            'duree' => $request->duree,
+            'session' => $request->session
         ]);
 
         foreach ($request->questions as $question) {
@@ -130,7 +130,12 @@ class ExamenController extends Controller
      */
     public function update(Request $request, Examen $examen)
     {
-        //
+        if (!$examen) {
+            return response()->json(['error' => "Cet examen n'existe pas"], Response::HTTP_NOT_FOUND);
+        }
+
+        $examen->update();
+        return response()->json(new ExamenRessource($examen), Response::HTTP_OK);
     }
 
     /**
