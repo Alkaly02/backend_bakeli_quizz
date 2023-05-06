@@ -134,7 +134,12 @@ class ExamenController extends Controller
             return response()->json(['error' => "Cet examen n'existe pas"], Response::HTTP_NOT_FOUND);
         }
 
-        $examen->update();
+        $examen->update($request->only([
+            'name',
+            'session',
+            'status',
+            'duree'
+        ]));
         return response()->json(new ExamenRessource($examen), Response::HTTP_OK);
     }
 
