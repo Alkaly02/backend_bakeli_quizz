@@ -9,7 +9,7 @@ class Cours extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'content', 'sous_domaine_id'];
+    protected $fillable = ['name', 'content', 'sous_domaine_id', "description", 'image'];
 
     public function sous_domaine()
     {

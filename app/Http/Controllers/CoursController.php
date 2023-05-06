@@ -38,7 +38,7 @@ class CoursController extends Controller
         ]);
 
         $cours = Cours::create($request->only([
-            'name', 'content', 'sous_domaine_id'
+            'name', 'content', 'sous_domaine_id', "description", "image"
         ]));
 
         return response()->json(new CoursResource($cours), Response::HTTP_CREATED);
@@ -50,8 +50,12 @@ class CoursController extends Controller
      * @param  \App\Models\Cours  $cours
      * @return \Illuminate\Http\Response
      */
-    public function show(Cours $cours)
+    public function show($id)
     {
+        $cours = Cours::with("sous_domaine.domaine")->find($id);
+        if (!$cours) {
+            return response()->json(['error' => 'Cours not found'], 404);
+        }
         return response()->json(new CoursResource($cours), Response::HTTP_OK);
     }
 
@@ -62,12 +66,14 @@ class CoursController extends Controller
      * @param  \App\Models\Cours  $cours
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cours $cours)
+    public function update(Request $request, $id)
     {
+        $cours = Cours::findOrFail($id);
+
         $cours->update($request->only([
             'name', "content"
         ]));
-        echo $request->content;
+
         return response()->json(new CoursResource($cours), Response::HTTP_OK);
     }
 

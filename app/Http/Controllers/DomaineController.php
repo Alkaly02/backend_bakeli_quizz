@@ -8,6 +8,10 @@ use App\Http\Resources\DomaineResource;
 use App\Models\Domaine;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+// use Tymon\JWTAuth\Exceptions\JWTException;
+// use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+// use Tymon\JWTAuth\Facades\JWTAuth;
+
 
 class DomaineController extends Controller
 {
@@ -18,6 +22,22 @@ class DomaineController extends Controller
      */
     public function index()
     {
+
+        // $token = $request->header('Authorization');
+        // try {
+        //     $token = JWTAuth::parseToken($token);
+        //     $payload = $token->getPayload();
+        //     if ($payload['exp'] < time()) {
+        //         throw new TokenExpiredException('Token has expired');
+        //     }
+        // } catch (TokenExpiredException $e) {
+        //     // Token has expired
+        //     return response()->json(['message' => 'Token has expired'], Response::HTTP_UNAUTHORIZED);
+        // } catch (JWTException $e) {
+        //     // Error while parsing token
+        //     return response()->json(['message' => 'Error while parsing token'], Response::HTTP_UNAUTHORIZED);
+        // }
+
         $domaines = Domaine::with('sous_domaines')->get();
 
         return response()->json(new DomaineCollection($domaines), Response::HTTP_OK);
@@ -32,7 +52,7 @@ class DomaineController extends Controller
     public function store(DomaineRequest $request)
     {
         $domaine = Domaine::create($request->only([
-            'name'
+            'name', "theme", "description", "image", "text_color",
         ]));
 
         return response()->json(new DomaineResource($domaine), Response::HTTP_CREATED);
@@ -46,6 +66,7 @@ class DomaineController extends Controller
      */
     public function show(Domaine $domaine)
     {
+        // echo($domaine);
         return response()->json(new DomaineResource($domaine));
     }
 
@@ -60,7 +81,9 @@ class DomaineController extends Controller
     {
         // TODO: we can check if the user is authorized to update
         $domaine->update($request->only([
-            'name'
+            'name',
+            "description",
+            "theme", "text_color", "image"
         ]));
 
         return response()->json(new DomaineResource($domaine), Response::HTTP_OK);
