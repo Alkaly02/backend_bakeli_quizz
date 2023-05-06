@@ -151,6 +151,21 @@ class ExamenController extends Controller
     }
 
     /**
+     * Get final examen
+     * 
+     * @param  \App\Models\Examen  $examen
+     * @return \Illuminate\Http\Response
+     */
+    public function get_examen_final(Examen $examen)
+    {
+        $examen_final = $examen
+            ->questions()
+            ->with(['reponses', 'choix'])
+            ->get();
+        return response()->json(new ExamenRessource($examen_final), Response::HTTP_OK);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -180,6 +195,7 @@ class ExamenController extends Controller
      */
     public function destroy(Examen $examen)
     {
-        //
+        $examen->delete();
+        return response()->json("", Response::HTTP_NO_CONTENT);
     }
 }
