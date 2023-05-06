@@ -5,6 +5,7 @@ use App\Http\Controllers\CoursController;
 use App\Http\Controllers\DomaineController;
 use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\SousDomaineController;
+use App\Http\Controllers\TentativeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,13 @@ Route::get("/cours/sous_domaines/{sous_domaine}", [CoursController::class, 'get_
 Route::apiResource("/cours", CoursController::class);
 
 # quizzes
+Route::get("/quizzes/choix/{quizz}", [QuizzController::class, 'get_quizz_choix']);
+Route::post("/quizzes/choix", [QuizzController::class, 'add_questions_choix']);
 Route::get("/quizzes/questions/{quizz}", [QuizzController::class, 'get_quizz_questions']);
-Route::get("/quizzes/cours/{cours}", [QuizzController::class, 'get_quizzes_by_cours']);
+Route::get("/cours/quizzes/{cours}", [QuizzController::class, 'get_quizzes_by_cours']);
 Route::apiResource("/quizzes", QuizzController::class);
+
+# choix
+
+# tenatives
+Route::apiResource("/tentatives", TentativeController::class);

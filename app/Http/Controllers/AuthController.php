@@ -46,13 +46,14 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'role_id' => 1,
         ]);
 
         $token = Auth::login($user);
@@ -83,6 +84,7 @@ class AuthController extends Controller
 
     protected function responseWithToken($token)
     {
-        return response()->json(['access_token' => $token, "token_type" => 'Bearer', 'expire_in' => 3600], Response::HTTP_OK);
+        return response()->json(['access_token' => $token, "token_type" => 'Bearer', 'expire_in' => 60], Response::HTTP_OK);
+        // return response()->json(['access_token' => $token, "token_type" => 'Bearer', 'expire_in' => 3600], Response::HTTP_OK);
     }
 }
