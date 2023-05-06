@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ExamenCollection;
 use App\Http\Resources\ExamenRessource;
+use App\Models\Domaine;
 use App\Models\Examen;
 use App\Models\SousDomaine;
 use Illuminate\Http\Request;
@@ -17,7 +19,11 @@ class ExamenController extends Controller
      */
     public function index()
     {
-        //
+        $examens = Domaine::with([
+            'sous_domaines.examens'
+        ])->get();
+
+        return response()->json(new ExamenCollection($examens), Response::HTTP_OK);
     }
 
     /**
