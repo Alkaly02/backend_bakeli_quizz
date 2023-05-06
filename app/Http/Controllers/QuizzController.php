@@ -152,21 +152,6 @@ class QuizzController extends Controller
      */
     public function add_questions_choix(Request $request)
     {
-        // {
-        //     "quizz_id": 20,
-        //     "tentative_id": 1
-        //     "choix": [
-        //         {
-        //             "question_id": 4,
-        //             "choixOptions": [7,9]
-        //         },
-        //         {
-        //             "question_id": 5,
-        //             "choixOptions": [10]
-        //         }
-        //     ]
-        // }
-
         if (Quizz::findOrFail($request->quizz_id)) {
             foreach ($request->choix as $choix) {
                 /**
@@ -192,15 +177,7 @@ class QuizzController extends Controller
         $choix = $quizz->questions()
             ->with('reponses')
             ->with('choix')
-            // ->select('id')
             ->get();
-        // ->with('choix')
-        // ->get();
-        // echo $quizz->questions()
-        //     ->with('reponses')
-        //     ->with('choix')
-        //     ->get();
-        // $choix->makeHidden(['question_id']);
         return response()->json(new QuizzCollection($choix), Response::HTTP_OK);
     }
 }
