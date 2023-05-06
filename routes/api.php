@@ -54,6 +54,7 @@ Route::get("/cours/quizzes/{cours}", [QuizzController::class, 'get_quizzes_by_co
 Route::apiResource("/quizzes", QuizzController::class);
 
 #examens
+Route::get('/examens/domaine/{domaine}', [ExamenController::class, 'examen_by_domaine']);
 Route::apiResource('/examens', ExamenController::class);
 
 # choix

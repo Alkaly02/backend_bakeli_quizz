@@ -27,6 +27,18 @@ class ExamenController extends Controller
     }
 
     /**
+     * Display a listing of examens by domaine.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function examen_by_domaine(Domaine $domaine)
+    {
+        $examens = Domaine::with('sous_domaines.examens')
+        ->find($domaine);
+        return response()->json(new ExamenCollection($examens), Response::HTTP_OK);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
