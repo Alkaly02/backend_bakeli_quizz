@@ -36,7 +36,7 @@ class ExamenController extends Controller
     public function examen_by_domaine(Domaine $domaine)
     {
         $examens = Domaine::with('sous_domaines.examens')
-        ->find($domaine);
+            ->find($domaine);
         return response()->json(new ExamenCollection($examens), Response::HTTP_OK);
     }
 
@@ -48,7 +48,7 @@ class ExamenController extends Controller
     public function examen_by_sous_domaine(SousDomaine $sous_domaine)
     {
         $examens = SousDomaine::with('examens')
-        ->find($sous_domaine);
+            ->find($sous_domaine);
         return response()->json(new ExamenCollection($examens), Response::HTTP_OK);
     }
 
@@ -108,19 +108,56 @@ class ExamenController extends Controller
      * @param  \App\Models\Examen  $examen
      * @return \Illuminate\Http\Response
      */
-    public function show(Examen $examen)
+    public function show($id)
     {
-        $examens = $examen
-            ->with(['questions.reponses'])
-            ->get();
 
-        $examens->each(function ($examen) {
-            $examen->questions->each(function ($question) {
-                $question->reponses->makeHidden('is_correct');
-            });
+        $examen = Examen::with(['questions.reponses'])->find($id);
+
+        $examen->questions->each(function ($question) {
+            $count = 0;
+            foreach ($question['reponses'] as $reponse) {
+                if ($reponse['is_correct']) {
+                    $count++;
+                }
+                $reponse->makeHidden(['is_correct']);
+                // $reponse->makeHidden('is_correct');
+            }
+
+            //Verify if count is more than 1
+            if ($count > 1) {
+                // We add a new element to the question
+                $question['manyOptions'] = true;
+            } else {
+                $question['manyOptions'] = false;
+            }
         });
 
-        return response()->json(new ExamenCollection($examens), Response::HTTP_OK); 
+        // $examens = $examen
+        //     ->with(['questions.reponses'])
+        //     ->get();
+
+        // $examens->each(function ($examen) {
+        //     $examen->questions->each(function ($question) {
+        //         $count = 0;
+        //         foreach ($question['reponses'] as $reponse) {
+        //             if ($reponse['is_correct']) {
+        //                 $count++;
+        //             }
+        //             $reponse->makeHidden(['is_correct']);
+        //             // $reponse->makeHidden('is_correct');
+        //         }
+
+        //         //Verify if count is more than 1
+        //         if ($count > 1) {
+        //             // We add a new element to the question
+        //             $question['manyOptions'] = true;
+        //         } else {
+        //             $question['manyOptions'] = false;
+        //         }
+        //     });
+        // });
+
+        return response()->json(new ExamenRessource($examen), Response::HTTP_OK);
     }
 
     /**
